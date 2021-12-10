@@ -1,0 +1,3 @@
+
+ID_TYPE_CITIZENSHIP = 'Citizenship'
+ID_TYPE_PAN = 'PAN'
