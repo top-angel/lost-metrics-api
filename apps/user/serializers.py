@@ -33,11 +33,15 @@ class RegisterSerializer(serializers.ModelSerializer):
     )
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True, required=True)
+    auth_token = serializers.SerializerMethodField()
+
+    def get_auth_token(self, obj):
+        return obj.token
 
     class Meta:
         model = User
         fields = ('username', 'password', 'password2', 'email', 'first_name',
-                  'last_name',
+                  'last_name', 'auth_token'
                   )
         extra_kwargs = {
             'first_name': {'required': True},
