@@ -3,14 +3,16 @@ from django.contrib.auth import user_logged_out
 # Register API
 from django.utils.decorators import method_decorator
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import generics, permissions
-from rest_framework.decorators import permission_classes, api_view
+from rest_framework import generics, permissions, mixins
+from rest_framework.decorators import permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.viewsets import GenericViewSet
 
+from apps.user.models import APIUser
 from apps.user.serializers import RegisterSerializer, LoginUserSerializer, UserSerializer, ChangePasswordSerializer, \
-    UpdateUserSerializer
+    UpdateUserSerializer, APIUserSerializer, AlterTokenValiditySerializer
 
 # Create your views here.
 
@@ -108,8 +110,55 @@ class UpdateProfileView(generics.CreateAPIView):
 
 
 @permission_classes([IsAuthenticated])
-@swagger_auto_schema(tags=['User'], method='GET', auto_schema=None, operation_summary='Get user profile',
-                     operation_description='Use this API to get user profile')
-@api_view(['GET'])
-def get_profile(request):
-    return Response(UserSerializer(request.user, many=False).data)
+class GetProfile(APIView):
+    @swagger_auto_schema(tags=['User'],
+                         auto_schema=None, operation_summary='Get user profile',
+                         operation_description='Use this API to get user profile')
+    def get(self, request, *args, **kwargs):
+        return Response(UserSerializer(request.user, many=False).data)
+
+
+class AlterTokenValidityView(APIView):
+    serializer_class = AlterTokenValiditySerializer
+
+    @swagger_auto_schema(
+        tags=['API User'],
+        operation_summary="Alter API user token validity",
+        operation_description="""Alter API user token validity". 
+    """
+    )
+    def post(self, request, *args, **kwargs):
+        serialized = AlterTokenValiditySerializer(data=request.data)
+        if serialized.is_valid(raise_exception=True):
+            serialized.save()
+        return Response({'message': 'Action performed successfully'})
+
+
+@method_decorator(name='list', decorator=swagger_auto_schema(
+    tags=['API User'],
+    operation_summary="List of API users",
+    operation_description="""List all API users. 
+    """
+))
+@method_decorator(name='retrieve', decorator=swagger_auto_schema(
+    tags=['API User'],
+    operation_summary="Get API user item",
+    operation_description="""Show full information for API user."""
+))
+@method_decorator(name='create', decorator=swagger_auto_schema(
+    tags=['API User'],
+    operation_summary="Create API user",
+    operation_description="""Create a new API user"""
+))
+@method_decorator(name='destroy', decorator=swagger_auto_schema(
+    tags=['API User'],
+    operation_summary="Delete API user"
+))
+class APIUserViewSet(mixins.CreateModelMixin,
+                     mixins.RetrieveModelMixin,
+                     mixins.DestroyModelMixin,
+                     mixins.ListModelMixin,
+                     GenericViewSet):
+    queryset = APIUser.objects.all()
+    serializer_class = APIUserSerializer
+    permission_classes = [IsAuthenticated]

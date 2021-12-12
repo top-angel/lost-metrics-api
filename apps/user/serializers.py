@@ -1,8 +1,13 @@
+import uuid
+
 from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.password_validation import get_default_password_validators
 from rest_framework import serializers
+from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueValidator
+
+from apps.user.models import APIUser
 
 User = get_user_model()
 
@@ -149,3 +154,47 @@ class UpdateUserSerializer(serializers.ModelSerializer):
         if item.is_valid(raise_exception=True):
             instance = item.save()
             return instance
+
+
+class APIUserSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+    api_user_name = serializers.CharField(write_only=True)
+    token = serializers.SerializerMethodField()
+    is_user_active = serializers.SerializerMethodField()
+
+    def get_name(self, obj):
+        return obj.first_name
+
+    def get_token(self, obj):
+        return obj.token
+
+    def get_is_user_active(self, obj):
+        return not obj.is_token_invalidated
+
+    def create(self, validated_data):
+        user = APIUser.objects.create(username=uuid.uuid4(), first_name=validated_data.get('api_user_name'),
+                                      is_api_user=True)
+        return user
+
+    class Meta:
+        fields = ['id', 'api_user_name', 'name', 'token', 'is_user_active']
+        model = APIUser
+
+
+class AlterTokenValiditySerializer(serializers.Serializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=APIUser.objects.all())
+    action = serializers.ChoiceField(choices=[(c, c) for c in ['validate', 'invalidate']])
+
+    def validate(self, attrs):
+        super().validate(attrs)
+        current_state = 'invalidate' if attrs.get('user').is_token_invalidated else 'validate'
+        if current_state == attrs.get('action'):
+            raise ValidationError({'action': 'Can not {} user'.format(attrs.get('action'))})
+        return attrs
+
+    def create(self, validated_data):
+        user = validated_data.get('user')
+        user.is_token_invalidated = validated_data.get('action') == 'invalidate'
+        user.save()
+        Token.objects.filter(user=user).delete()
+        return {'message': 'Action performed successfully'}

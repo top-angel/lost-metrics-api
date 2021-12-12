@@ -102,3 +102,100 @@ class UserRelatedTestCases(APITestCase):
             format='json'
         )
         self.assertEqual(response.status_code, 200)
+
+
+class APIUserTestCases(APITestCase):
+    def register_user(self):
+        """
+        register user
+        """
+        url = reverse('register')
+        response = self.client.post(
+            url,
+            {
+                'first_name': 'Abhinav',
+                'last_name': 'Dev',
+                'email': 'theabhinavdev@gmail.com',
+                'password': 'Password@123',
+                'password2': 'Password@123',
+                'username': 'theabhinav'
+            },
+            format='json'
+        )
+        self.assertEqual(response.status_code == 201, True)
+
+    def login_user(self):
+        """
+         user login and authenticate as that user
+        """
+        self.register_user()
+        url = reverse('login')
+        response = self.client.post(
+            url,
+            {
+                'password': 'Password@123',
+                'username': 'theabhinav'
+            },
+            format='json'
+        )
+        self.assertEqual(response.status_code == 200, True)
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + response.data.get('auth_token').get('access'))
+
+    def test_api_user_creation(self):
+        self.login_user()
+        url = reverse('api_user-list')
+        response = self.client.post(
+            url,
+            {
+                'api_user_name': 'Some name',
+            },
+            format='json'
+        )
+        self.assertEqual(response.status_code, 201)
+
+    def test_api_user_list(self):
+        self.login_user()
+        url = reverse('api_user-list')
+        response = self.client.get(
+            url,
+            format='json'
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_api_user_retrieve(self):
+        self.test_api_user_creation()
+        url = reverse('api_user-detail', args=[2])
+        response = self.client.get(
+            url,
+            format='json'
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_api_user_delete(self):
+        self.test_api_user_creation()
+        url = reverse('api_user-detail', args=[2])
+        response = self.client.delete(
+            url,
+            format='json'
+        )
+        self.assertEqual(response.status_code, 204)
+
+    def test_alter_user_validity(self):
+        self.test_api_user_creation()
+        url = reverse('alter_user_token')
+        data_list = [
+            {
+                'user': 2,
+                'action': action
+            } for action in [
+                'invalidate', 'validate', 'validate', 'invalidate'
+            ]
+        ]
+        result = [True, True, False, True]
+        for i in range(4):
+            response = self.client.post(
+                url,
+                data=data_list[i],
+                format='json'
+            )
+            self.assertEqual(response.status_code == 200, result[i])
