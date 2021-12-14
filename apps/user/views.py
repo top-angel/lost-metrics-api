@@ -19,7 +19,7 @@ from apps.user.serializers import RegisterSerializer, LoginUserSerializer, UserS
 User = get_user_model()
 
 
-@method_decorator(name='post', decorator=swagger_auto_schema(tags=['User'],
+@method_decorator(name='post', decorator=swagger_auto_schema(tags=['user'],
                                                              operation_summary='Register user',
                                                              operation_description="Use this API to register user"
                                                              ))
@@ -36,7 +36,7 @@ class LoginAPI(generics.GenericAPIView):
     permission_classes = (permissions.AllowAny,)
     serializer_class = LoginUserSerializer
 
-    @swagger_auto_schema(tags=['User'],
+    @swagger_auto_schema(tags=['user'],
                          operation_summary='User login',
                          operation_description="Use this API to Login User")
     def post(self, request, *args, **kwargs):
@@ -59,7 +59,7 @@ class LoginAPI(generics.GenericAPIView):
 class LogoutView(APIView):
     permission_classes = (IsAuthenticated,)
 
-    @swagger_auto_schema(tags=['User'],
+    @swagger_auto_schema(tags=['user'],
                          operation_summary='User logout',
                          operation_description="Use this API to logout User")
     def post(self, request):
@@ -71,10 +71,12 @@ class LogoutView(APIView):
         return Response({'status': True})
 
 
-@method_decorator(name='post', decorator=swagger_auto_schema(tags=['User'],
-                                                             operation_summary='Change user password',
-                                                             operation_description="Use this API to change user password"
-                                                             ))
+@method_decorator(name='post',
+                  decorator=swagger_auto_schema(
+                      tags=['user'],
+                      operation_summary='Change user password',
+                      operation_description="Use this API to change user password"
+                  ))
 class ChangePasswordView(generics.CreateAPIView):
     """
         User can change their password with this API
@@ -92,10 +94,12 @@ class ChangePasswordView(generics.CreateAPIView):
         return Response({'message': 'Password change successful'})
 
 
-@method_decorator(name='post', decorator=swagger_auto_schema(tags=['User'],
-                                                             operation_summary='Update user profile',
-                                                             operation_description="Use this API to update user profile"
-                                                             ))
+@method_decorator(name='post',
+                  decorator=swagger_auto_schema(
+                      tags=['user'],
+                      operation_summary='Update user profile',
+                      operation_description="Use this API to update user profile"
+                  ))
 class UpdateProfileView(generics.CreateAPIView):
     """
         This API is used to update profile detail of authenticated user.
@@ -109,9 +113,8 @@ class UpdateProfileView(generics.CreateAPIView):
         return obj
 
 
-@permission_classes([IsAuthenticated])
 class GetProfile(APIView):
-    @swagger_auto_schema(tags=['User'],
+    @swagger_auto_schema(tags=['user'],
                          auto_schema=None, operation_summary='Get user profile',
                          operation_description='Use this API to get user profile')
     def get(self, request, *args, **kwargs):

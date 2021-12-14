@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 ]
 INSTALLED_APPS += [
     'apps.user',
+    'apps.contact',
     'django_rest_passwordreset',
     'rest_framework',
     'rest_framework.authtoken',
