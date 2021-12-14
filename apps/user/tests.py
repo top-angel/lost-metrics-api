@@ -16,12 +16,12 @@ class UserRelatedTestCases(APITestCase):
         response = self.client.post(
             url,
             {
-                'first_name': 'Abhinav',
-                'last_name': 'Dev',
-                'email': 'theabhinavdev@gmail.com',
+                'first_name': 'Jeffrey',
+                'last_name': 'Drum',
+                'email': 'jeffrey@gaugedsolutions.com',
                 'password': 'Password@123',
                 'password2': 'Password@123',
-                'username': 'theabhinav'
+                'username': 'JeffDrum'
             },
             format='json'
         )
@@ -37,7 +37,7 @@ class UserRelatedTestCases(APITestCase):
             url,
             {
                 'password': 'Password@123',
-                'username': 'theabhinav'
+                'username': 'JeffDrum'
             },
             format='json'
         )
@@ -73,7 +73,7 @@ class UserRelatedTestCases(APITestCase):
         response = self.client.post(
             url,
             {
-                'email': 'theabhinavdev@gmail.com',
+                'email': 'jeffrey@gaugedsolutions.com',
             },
             format='json'
         )
@@ -85,7 +85,7 @@ class UserRelatedTestCases(APITestCase):
         response = self.client.post(
             url,
             {
-                'email': 'theabhinavdev@gmail.com',
+                'email': 'jeffrey@gaugedsolutions.com',
                 'first_name': 'Some first name',
                 'last_name': 'Some last name',
                 'username': 'random123',
@@ -113,12 +113,12 @@ class APIUserTestCases(APITestCase):
         response = self.client.post(
             url,
             {
-                'first_name': 'Abhinav',
-                'last_name': 'Dev',
-                'email': 'theabhinavdev@gmail.com',
+                'first_name': 'Jeffrey',
+                'last_name': 'Drum',
+                'email': 'jeffrey@gaugedsolutions.com',
                 'password': 'Password@123',
                 'password2': 'Password@123',
-                'username': 'theabhinav'
+                'username': 'JeffDrum'
             },
             format='json'
         )
@@ -134,7 +134,7 @@ class APIUserTestCases(APITestCase):
             url,
             {
                 'password': 'Password@123',
-                'username': 'theabhinav'
+                'username': 'JeffDrum'
             },
             format='json'
         )
