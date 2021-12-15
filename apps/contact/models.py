@@ -28,3 +28,13 @@ class Contact(models.Model):
 
     def __str__(self):
         return self.uid if self.uid else self.email
+
+
+class Interest(models.Model):
+    contact = models.ForeignKey(Contact, on_delete=models.CASCADE)
+    url = models.URLField(null=True, blank=True)
+    category = models.CharField(max_length=100, null=True, blank=True)
+    value = models.TextField(null=True, blank=True,)
+
+    def __str__(self):
+        return 'Interest of {}'.format(str(self.contact))

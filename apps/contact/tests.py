@@ -32,4 +32,20 @@ class APIUserTestCases(APITestCase):
             },
             format='json'
         )
+        self.contact_id = response.data.get('id')
+        self.assertEqual(response.status_code, 201)
+
+    def test_create_interest(self):
+        self.test_create_contact()
+        url = reverse('create_interest')
+        response = self.client.post(
+            url,
+            {
+                "contact": self.contact_id,
+                'url': 'https://example.com',
+                'category': 'Some category',
+                'value': 'Some value'
+            },
+            format='json'
+        )
         self.assertEqual(response.status_code, 201)

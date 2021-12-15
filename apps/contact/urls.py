@@ -7,4 +7,5 @@ router = routers.SimpleRouter()
 urlpatterns = [
     path('', include(router.urls)),
     path('create_contact/', CreateContact.as_view(), name='create_contact'),
+    path('create_interest/', CreateInterest.as_view(), name='create_interest'),
 ]
