@@ -3,8 +3,8 @@ from django.utils.decorators import method_decorator
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.generics import CreateAPIView
 
-from apps.contact.models import Contact
-from apps.contact.serializers import ContactSerializer
+from apps.contact.models import Contact, Interest
+from apps.contact.serializers import ContactSerializer, InterestSerializer
 
 
 @method_decorator(name='post',
@@ -16,3 +16,14 @@ from apps.contact.serializers import ContactSerializer
 class CreateContact(CreateAPIView):
     serializer_class = ContactSerializer
     queryset = Contact.objects.all()
+
+
+@method_decorator(name='post',
+                  decorator=swagger_auto_schema(
+                      tags=['Contact'],
+                      operation_summary='Create Interest for a contact',
+                      operation_description="Use this API to create Interest for a contact."
+                  ))
+class CreateInterest(CreateAPIView):
+    serializer_class = InterestSerializer
+    queryset = Interest.objects.all()

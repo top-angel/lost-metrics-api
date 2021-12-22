@@ -1,0 +1,42 @@
+[
+  {
+    "model": "user.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$320000$z3YjBgQuEVTLxmD9NHAr3h$HyC3qWWYFCKugxJ7HjE0e65jHja0qyZepy+oBq8AHns=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "jeffreydrum",
+      "first_name": "Jeffrey",
+      "last_name": "Drum",
+      "email": "jeffrey@gaugedsolutions.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2021-12-10T16:35:06Z",
+      "is_api_user": false,
+      "is_token_invalidated": false,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "user.user",
+    "pk": 2,
+    "fields": {
+      "password": "pbkdf2_sha256$320000$V8vWEpMCBeVN7oHKkQLKur$VUd55YeTYQOWairfq2bba0UqUMdDRcVzMJOKesiJw8I=",
+      "last_login": "2021-12-16T06:43:55Z",
+      "is_superuser": true,
+      "username": "jeffrey",
+      "first_name": "",
+      "last_name": "",
+      "email": "jeffrey@gaugedsolutions.com",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2021-12-12T06:04:42Z",
+      "is_api_user": false,
+      "is_token_invalidated": false,
+      "groups": [],
+      "user_permissions": []
+    }
+  }
+]

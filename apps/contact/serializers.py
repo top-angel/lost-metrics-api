@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from apps.contact.models import Contact
+from apps.contact.models import Contact, Interest
 
 
 class ContactSerializer(serializers.ModelSerializer):
@@ -12,3 +12,13 @@ class ContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contact
         fields = '__all__'
+
+
+class InterestSerializer(serializers.ModelSerializer):
+    def validate(self, attrs):
+        return attrs
+
+    class Meta:
+        model = Interest
+        fields = '__all__'
+
