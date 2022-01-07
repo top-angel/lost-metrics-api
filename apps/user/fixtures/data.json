@@ -33,7 +33,7 @@
       "is_staff": true,
       "is_active": true,
       "date_joined": "2021-12-12T06:04:42Z",
-      "is_api_user": false,
+      "is_api_user": true,
       "is_token_invalidated": false,
       "groups": [],
       "user_permissions": []
