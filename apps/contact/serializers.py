@@ -1,3 +1,4 @@
+from django.db.models import Q
 from rest_framework import serializers
 
 from apps.contact.models import Contact, Interest
@@ -8,6 +9,20 @@ class ContactSerializer(serializers.ModelSerializer):
         super().validate(attrs)
         Contact(**attrs).clean()
         return attrs
+
+    def create(self, validated_data):
+        uid = validated_data.get('uid', None)
+        email = validated_data.get('email', None)
+        qs = Contact.objects.filter(Q(uid=uid) | Q(email=email))
+        if qs.exists():
+            data = {}
+            # to remove empty values
+            for k, v in validated_data.items():
+                if v:
+                    data[k] = v
+            qs.update(**data)
+            return qs.first()
+        return super().create(validated_data)
 
     class Meta:
         model = Contact
