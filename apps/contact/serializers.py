@@ -2,6 +2,7 @@ from django.db.models import Q
 from rest_framework import serializers
 
 from apps.contact.models import Contact, Interest
+from apps.utils.serializer_utils import ModifiedEnhancedToRepSerializer
 
 
 class ContactSerializer(serializers.ModelSerializer):
@@ -29,11 +30,16 @@ class ContactSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class InterestSerializer(serializers.ModelSerializer):
+class InterestSerializer(ModifiedEnhancedToRepSerializer):
+    fk_field_serializer_class = {
+        'contact': {
+            'class': ContactSerializer
+        }
+    }
+
     def validate(self, attrs):
         return attrs
 
     class Meta:
         model = Interest
         fields = '__all__'
-
