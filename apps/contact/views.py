@@ -98,3 +98,8 @@ class CreateInterest(CreateAPIView):
 class InterestViewSet(ModelViewSet):
     serializer_class = InterestSerializer
     queryset = Interest.objects.all()
+    filterset_fields = {
+        'category': ['exact'],
+        'contact': ['exact',]
+    }
+    search_fields = ['url', 'category', 'value']
