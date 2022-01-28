@@ -103,3 +103,47 @@ class InterestViewSet(ModelViewSet):
         'contact': ['exact',]
     }
     search_fields = ['url', 'category', 'value']
+
+@method_decorator(name='list', decorator=swagger_auto_schema(
+    tags=['Contact'],
+    operation_summary="List all the interests",
+    operation_description="""List all API users. 
+    """
+))
+@method_decorator(name='retrieve', decorator=swagger_auto_schema(
+    tags=['Contact'],
+    operation_summary="Get interest object",
+    operation_description="""Show full information for interest."""
+))
+@method_decorator(name='update', decorator=swagger_auto_schema(
+    tags=['Contact'],
+    operation_summary="Update a interest list",
+    operation_description="""Update interest object."""
+))
+@method_decorator(name='partial_update', decorator=swagger_auto_schema(
+    tags=['Contact'],
+    operation_summary="Partial Update a interest list",
+    operation_description="""Partial Update interest object."""
+))
+@method_decorator(name='create', decorator=swagger_auto_schema(
+    tags=['Contact'],
+    operation_summary="Create Interest object",
+    operation_description="""Create a new interest"""
+))
+@method_decorator(name='destroy', decorator=swagger_auto_schema(
+    tags=['Contact'],
+    operation_summary="Delete Contact"
+))
+class FilteredInterestViewSet(ModelViewSet):
+    serializer_class = InterestSerializer
+    queryset = Interest.objects.all()
+    filterset_fields = {
+        'category': ['exact'],
+        'contact': ['exact',]
+    }
+    search_fields = ['url', 'category', 'value']
+
+    def get_queryset(self):
+        if 'contact_pk' in self.kwargs:
+            return super().get_queryset().filter(contact_id=self.kwargs.get('contact_pk'))
+        return super().get_queryset()
