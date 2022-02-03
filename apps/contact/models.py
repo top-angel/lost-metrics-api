@@ -1,3 +1,5 @@
+from django.utils import timezone
+
 from django.core.exceptions import ValidationError
 from django.db import models
 
@@ -20,6 +22,7 @@ class Contact(models.Model):
     last_name = models.CharField(max_length=200, blank=True, null=True)
     phone = models.CharField(max_length=200, blank=True, null=True)
     company = models.CharField(max_length=200, blank=True, null=True)
+    last_interest_datetime = models.DateTimeField(default=timezone.now)
 
     def clean(self):
         super().clean()

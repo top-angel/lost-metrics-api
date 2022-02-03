@@ -17,6 +17,14 @@ class User(AbstractUser):
             access=str(refresh.access_token)
         )
 
+    @property
+    def api_token(self):
+        if self.is_token_invalidated:
+            return
+        token, _ = Token.objects.get_or_create(user=self)
+        return token.key
+
+
     def __str__(self):
         if self.first_name or self.last_name:
             return '{}  {}'.format(self.first_name, self.last_name)

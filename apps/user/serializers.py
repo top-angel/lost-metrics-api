@@ -87,13 +87,17 @@ class LoginUserSerializer(serializers.Serializer):
 
 class UserSerializer(serializers.ModelSerializer):
     auth_token = serializers.SerializerMethodField()
+    api_token = serializers.SerializerMethodField()
 
     def get_auth_token(self, obj):
         return obj.token
 
+    def get_api_token(self, obj):
+        return obj.api_token
+
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'auth_token']
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'auth_token', 'api_token']
 
 
 class ChangePasswordSerializer(serializers.ModelSerializer):
